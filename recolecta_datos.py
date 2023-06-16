@@ -36,16 +36,16 @@ def corregir(evaluacion):
     correctas =open(evaluacion+"_pauta.csv","r")
     linea_correctas = correctas.readlines()[0].strip("\n").split(",")
     correctas.close()
-    resultados = open(evaluacion.cvs, "r")
+    resultados = open(evaluacion+".csv", "r")
     lineas = resultados.readlines()
     lista_alumnos_correccion = []
-    for linea in lineas:
+    for linea in lineas[1:]:
         linea.strip("\n")
         lista_linea = linea.split(",")
         n_buenas = 0
         n_malas = 0
         n_omitidas = 0
-        for i in range(linea_correctas):
+        for i in range(len(linea_correctas)):
             if linea_correctas[i] == lista_linea[i+4]:
                 n_buenas = n_buenas + 1
             if lista_linea[i+4] == "":
@@ -59,7 +59,8 @@ def corregir(evaluacion):
     resultados.close()
     resultados_alumnos = open(evaluacion+"_correccion.csv","w")
     resultados_alumnos.write("Nombres,Apellidos,Rut,Curso,Buenas,Malas,Omitidas\n")
-    resultados_alumnos.write(lista_alumnos_correccion)
+    for alumno in lista_alumnos_correccion:
+        resultados_alumnos.write(alumno)
     resultados_alumnos.close()
 
 
