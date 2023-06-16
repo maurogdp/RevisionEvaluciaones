@@ -7,13 +7,28 @@ def ingresar_respuestas(evaluacion,numero_de_preguntas):
         apellidos = input("Apellidos: ")
         rut = input("RUT: ")
         curso = input("Curso: ")
-        datos=nombres+","+apellidos+","+rut
-        for i in range(0, numero_de_preguntas):
+        datos=nombres+","+apellidos+","+rut+","+curso
+        lista_respuestas = []
+        for i in range(numero_de_preguntas):
             respuesta = input(str(i+1)+". -> ")
-            datos=datos+","+respuesta
+            if respuesta == "0":
+                num = int(input("Ingresa el número de la pregunta que quieres corregir: "))
+                res = input(str(num)+". -> ")
+                print("En la pregunta", num, "has cambiado la respuesta", lista_respuestas[num-1], "por la respuesta",res+".")
+                lista_respuestas = corregir_respuesta(lista_respuestas,num,res)
+                respuesta = input(str(i+1)+". -> ")
+            lista_respuestas.append(respuesta)
+            
+        for res in lista_respuestas:
+            datos=datos+","+res
         archivo.write(datos+"\n")
         iniciar = input("Ingresar otro alumno?(S/N) -> ")
     archivo.close()
+
+def corregir_respuesta(lista, numero_pregunta,alternativa_correcta):
+    lista[numero_pregunta-1]=alternativa_correcta
+    return lista
+
 
 def crear_pauta(numero_de_preguntas):
     respuestas=""
