@@ -1,6 +1,9 @@
 def ingresar_respuestas(evaluacion,numero_de_preguntas):
     archivo = open(evaluacion+".csv","w")
-
+    linea1 = "Nombres,Apellidos,Rut,Curso"
+    for p in range(numero_de_preguntas):
+        linea1 = linea1 + ",P" + str(p+1)
+    archivo.write(linea1+"\n")
     iniciar = input("Añadir alumnos?(S/N) -> ")
     while iniciar.lower()=="s": 
         nombres = input("Nombres: ")
@@ -28,6 +31,36 @@ def ingresar_respuestas(evaluacion,numero_de_preguntas):
 def corregir_respuesta(lista, numero_pregunta,alternativa_correcta):
     lista[numero_pregunta-1]=alternativa_correcta
     return lista
+
+def corregir(evaluacion):
+    correctas =open(evaluacion+"_pauta.csv","r")
+    linea_correctas = correctas.readlines()[0].strip("\n").split(",")
+    correctas.close()
+    resultados = open(evaluacion.cvs, "r")
+    lineas = resultados.readlines()
+    lista_alumnos_correccion = []
+    for linea in lineas:
+        linea.strip("\n")
+        lista_linea = linea.split(",")
+        n_buenas = 0
+        n_malas = 0
+        n_omitidas = 0
+        for i in range(linea_correctas):
+            if linea_correctas[i] == lista_linea[i+4]:
+                n_buenas = n_buenas + 1
+            if lista_linea[i+4] == "":
+                n_omitidas = n_omitidas + 1
+        n_malas = len(linea_correctas)-n_buenas-n_omitidas
+        correccion = ""
+        for i in range(0,4):
+            correccion = correccion + str(lista_linea[i]) + ","
+        correccion = correccion + str(n_buenas) + "," + str(n_malas) + "," + str(n_omitidas)+"\n"
+        lista_alumnos_correccion.append(correccion)
+    resultados.close()
+    resultados_alumnos = open(evaluacion+"_correccion.csv","w")
+    resultados_alumnos.write("Nombres,Apellidos,Rut,Curso,Buenas,Malas,Omitidas\n")
+    resultados_alumnos.write(lista_alumnos_correccion)
+    resultados_alumnos.close()
 
 
 def crear_pauta(numero_de_preguntas):
@@ -59,4 +92,5 @@ if respuesta.lower()=="s":
     print("Ahora, comencemos con el ingreso de los estudantes.")
     print()
     ingresar_respuestas(evaluacion,numero_de_preguntas)
+    corregir(evaluacion)
     
