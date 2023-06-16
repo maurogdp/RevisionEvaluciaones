@@ -34,17 +34,18 @@ def corregir_respuesta(lista, numero_pregunta,alternativa_correcta):
 
 def corregir(evaluacion):
     correctas =open(evaluacion+"_pauta.csv","r")
-    linea_correctas = correctas.readlines()[0].strip("\n").split(",")
+    linea_correctas = correctas.readlines()[0].rstrip("\n").split(",")
     correctas.close()
     resultados = open(evaluacion+".csv", "r")
     lineas = resultados.readlines()
     lista_alumnos_correccion = []
     for linea in lineas[1:]:
-        linea.strip("\n")
-        lista_linea = linea.split(",")
+        lista_linea = linea.rstrip("\n").split(",")
         n_buenas = 0
         n_malas = 0
         n_omitidas = 0
+        print(linea_correctas)
+        print(lista_linea)
         for i in range(len(linea_correctas)):
             if linea_correctas[i] == lista_linea[i+4]:
                 n_buenas = n_buenas + 1
