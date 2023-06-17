@@ -12,25 +12,21 @@ def ingresar_respuestas(evaluacion,numero_de_preguntas):
         curso = input("Curso: ")
         datos=nombres+","+apellidos+","+rut+","+curso
         lista_respuestas = []
-        for i in range(numero_de_preguntas):
+        i=0
+        while i < numero_de_preguntas:
             respuesta = input(str(i+1)+". -> ")
             if respuesta == "0":
-                num = int(input("Ingresa el número de la pregunta que quieres corregir: "))
-                res = input(str(num)+". -> ")
-                print("En la pregunta", num, "has cambiado la respuesta", lista_respuestas[num-1], "por la respuesta",res+".")
-                lista_respuestas = corregir_respuesta(lista_respuestas,num,res)
-                respuesta = input(str(i+1)+". -> ")
+                num = int(input("Ingresa el número de la pregunta a la que quieres regresar: "))
+                i=num-1
+                lista_respuestas=lista_respuestas[:i]
+                continue
             lista_respuestas.append(respuesta)
-            
+            i=i+1
         for res in lista_respuestas:
             datos=datos+","+res
         archivo.write(datos+"\n")
         iniciar = input("Ingresar otro alumno?(S/N) -> ")
     archivo.close()
-
-def corregir_respuesta(lista, numero_pregunta,alternativa_correcta):
-    lista[numero_pregunta-1]=alternativa_correcta
-    return lista
 
 def corregir(evaluacion):
     correctas =open(evaluacion+"_pauta.csv","r")
@@ -69,17 +65,25 @@ def crear_pauta(numero_de_preguntas):
     respuestas=""
     print("A continuación ingresa las respuestas correctas de los",numero_de_preguntas,"ejercicios.")
     print()
-    for i in range(numero_de_preguntas):
+    i=0
+    lista_respuestas = []
+    while i < numero_de_preguntas:
         respuesta = input(str(i+1)+". -> ")
-        if i == 0:
-            respuestas = respuesta
-        else:
-            respuestas = respuestas + "," + respuesta
+        if respuesta == "0":
+            num = int(input("Ingresa el número de la pregunta a la que quieres regresar: "))
+            i=num-1
+            lista_respuestas=lista_respuestas[:i]
+            continue
+        lista_respuestas.append(respuesta)
+        i=i+1
+    datos = lista_respuestas[0]
+    for res in lista_respuestas[1:]:
+        datos=datos+","+res
     print()
     print("Ya has ingresado todas las respuestas de la pauta, bien hecho!")
     print()
     archivo = open(evaluacion+"_pauta.csv","w")
-    archivo.write(respuestas+"\n")
+    archivo.write(datos+"\n")
     archivo.close()
     print("La pauta se ha creado correctamente.")
 
